@@ -15,6 +15,21 @@ const users = [{
     role: 'member'
 }];
 
+const contacts = [{
+    Id: 1,
+    Name: 'Yaakov',
+    Email: 'kobieshka@gmail.com',
+    Phone: '054-7974202',
+    CompanyID: 1
+}];
+
+const companies = [{
+    Id: 1,
+    Name: 'John Bryce',
+    Country: 'Israel'
+}];
+
+
 const loginCtrl = require('./controllers/login.controller');
 //const companyCtrl = require('./controllers/company.controller');
 
@@ -39,6 +54,26 @@ myServer.post('/login', function(req, res) {
         res.status(403).send();
     }
 });
+
+myServer.get('/contact', function(req, res) {
+    const [tokenType, userToken] = req.headers.authorization.split(' ');
+    console.log(tokenType, userToken);
+    if (tokenType === 'Bearer') {
+        console.log('user TOKEN - ', userToken);
+
+        try {
+            jwt.verify(userToken, SECRET_KEY);
+            res.send(contacts);
+
+        } catch (ex) {
+            return res.status(401).send(ex);
+        }
+
+    }
+
+    return res.status(401).send();
+
+})
 
 // myServer.use(function(req, res, next) {
 //     if (guestRoutes.indexOf(req._parsedUrl.pathname) > -1) {
