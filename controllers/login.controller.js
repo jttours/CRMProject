@@ -1,15 +1,22 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
 
+const myServer = express();
 const loginController = express.Router();
 
-loginController.post('/', function(req, res) {
-    const { user, pass } = req.body;
-    if (user === 'abc' && pass === 'abc') {
-        const token = jwt.sign({ user: 'abc' }, process.env.SECRET_KEY);
-        return res.send(token);
+myServer.post('/', function(req, res) {
+    const { username, password } = req.body;
+    const user = users.find(u => { return u.username === username && u.password === password });
+
+    if (user) {
+        const token = jwt.sign({ username: user.username, role: user.role }, SECRET_KEY);
+
+        res.json({
+            token
+        });
+    } else {
+        res.status(403).send();
     }
-    return res.status(403).send();
 });
 
 module.exports = loginController;
